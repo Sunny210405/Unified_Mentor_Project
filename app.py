@@ -30,7 +30,7 @@ EXPLICIT_COLORS = {"Explicit": "#EB5757", "Clean": "#1DB954"}
 
 
 st.set_page_config(
-    page_title="Atlantic Spain Lifecycle Analytics",
+    page_title="Spain50 Analytics",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -838,8 +838,8 @@ def main() -> None:
         st.markdown(
             """
             <div class="sidebar-brand">
-                <div class="sidebar-brand-title">Atlantic Spain</div>
-                <div class="sidebar-brand-sub">Top 50 lifecycle command center</div>
+                <div class="sidebar-brand-title">Spain50 Analytics</div>
+                <div class="sidebar-brand-sub">Daily Top 50 Playlist Intelligence</div>
             </div>
             <div class="sidebar-section-label">Source</div>
             """,
@@ -920,8 +920,8 @@ def main() -> None:
     st.markdown(
         """
         <section class="hero-shell">
-            <div class="hero-topline">Atlantic Spain Top 50 • Spotify-style lifecycle desk</div>
-            <h1 class="hero-title">Playlist lifecycle intelligence</h1>
+            <div class="hero-topline">Spain50 Analytics • Daily Top 50 Playlist Intelligence</div>
+            <h1 class="hero-title">Playlist Lifecycle Intelligence</h1>
             <p class="hero-copy">
                 Track entries, exits, maturity, and retention with album artwork, content filters,
                 and release-form diagnostics for Spain's daily Top 50.
