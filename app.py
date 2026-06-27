@@ -1147,11 +1147,11 @@ def main() -> None:
     full_artwork_count = len(latest_unique_artwork(filtered_stage, 50, by_cover=False))
     if full_artwork_count > 6:
         if is_expanded:
-            if st.button("Show Less ⬆️", key="toggle_covers_btn"):
+            if st.button("Show Less ↑", key="toggle_covers_btn"):
                 st.session_state["show_all_covers"] = False
                 st.rerun()
         else:
-            if st.button(f"Show All Top {full_artwork_count} ⬇️", key="toggle_covers_btn"):
+            if st.button(f"Show All Top {full_artwork_count} ↓", key="toggle_covers_btn"):
                 st.session_state["show_all_covers"] = True
                 st.rerun()
 
