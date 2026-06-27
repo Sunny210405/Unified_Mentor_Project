@@ -279,19 +279,29 @@ def inject_global_styles() -> None:
             margin: 1.05rem 0 .45rem;
         }
 
-        [data-testid="stSidebar"] .stTextInput input,
-        [data-testid="stSidebar"] .stDateInput input,
+        /* Style the outer wrapper containers instead of the inner input to prevent double borders */
+        [data-testid="stSidebar"] .stTextInput [data-baseweb="input"],
+        [data-testid="stSidebar"] .stDateInput [data-baseweb="input"],
         [data-testid="stSidebar"] [data-baseweb="select"] > div {
-            background: #121212;
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 8px;
-            transition: border-color 0.25s ease;
+            background: #121212 !important;
+            border: 1px solid rgba(255,255,255,.08) !important;
+            border-radius: 8px !important;
+            transition: border-color 0.25s ease !important;
         }
 
-        [data-testid="stSidebar"] .stTextInput input:focus,
-        [data-testid="stSidebar"] .stDateInput input:focus,
+        [data-testid="stSidebar"] .stTextInput [data-baseweb="input"]:focus-within,
+        [data-testid="stSidebar"] .stDateInput [data-baseweb="input"]:focus-within,
         [data-testid="stSidebar"] [data-baseweb="select"] > div:hover {
             border-color: rgba(29, 185, 84, 0.5) !important;
+        }
+
+        /* Reset the inner input tags to prevent double borders/padding */
+        [data-testid="stSidebar"] .stTextInput input,
+        [data-testid="stSidebar"] .stDateInput input {
+            border: none !important;
+            background: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
         }
 
         /* Vertically center "Press Enter to apply" hint inside date input */
