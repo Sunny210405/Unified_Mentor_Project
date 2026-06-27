@@ -782,6 +782,7 @@ def clear_search() -> None:
 
 def render_metric_grid(metrics: list[tuple[str, str, str]]) -> None:
     import re as _re
+    import streamlit.components.v1 as _components
 
     def _extract(val: str):
         """Return (numeric_float, suffix) from a formatted value string like '48.2', '3.5%', '575'."""
@@ -815,14 +816,19 @@ def render_metric_grid(metrics: list[tuple[str, str, str]]) -> None:
                 f'</div>'
             )
 
-    ids_json = "[" + ",".join(f'"{c}"' for c in js_targets) + "]"
+    # Render cards via markdown (script tags are stripped here, that's fine)
+    st.markdown(
+        f'<div class="metric-grid">{"".join(cards_html)}</div>',
+        unsafe_allow_html=True,
+    )
 
-    anim_js = f"""
+    # Inject animation via iframe component — uses window.parent.document to reach the main DOM
+    ids_json = "[" + ",".join(f'"{c}"' for c in js_targets) + "]"
+    anim_html = f"""
     <script>
     (function() {{
         var ids = {ids_json};
         var duration = 1400;
-        var startTime = null;
 
         function easeOut(t) {{ return 1 - Math.pow(1 - t, 3); }}
 
@@ -831,40 +837,32 @@ def render_metric_grid(metrics: list[tuple[str, str, str]]) -> None:
             return Math.round(val).toLocaleString();
         }}
 
-        function animate(timestamp) {{
-            if (!startTime) startTime = timestamp;
-            var progress = Math.min((timestamp - startTime) / duration, 1);
-            var eased = easeOut(progress);
-
-            ids.forEach(function(id) {{
-                var el = document.getElementById(id);
-                if (!el) return;
-                var target = parseFloat(el.dataset.target);
-                var suffix = el.dataset.suffix || "";
-                var isFloat = (el.dataset.target.indexOf(".") !== -1);
-                el.textContent = formatNum(target * eased, isFloat) + suffix;
-            }});
-
-            if (progress < 1) requestAnimationFrame(animate);
-        }}
-
-        // Wait for DOM to be ready then kick off animation
-        function start() {{
+        function runAnimation() {{
+            var startTime = null;
+            function animate(timestamp) {{
+                if (!startTime) startTime = timestamp;
+                var progress = Math.min((timestamp - startTime) / duration, 1);
+                var eased = easeOut(progress);
+                ids.forEach(function(id) {{
+                    var el = window.parent.document.getElementById(id);
+                    if (!el) return;
+                    var target = parseFloat(el.dataset.target);
+                    var suffix = el.dataset.suffix || "";
+                    var isFloat = el.dataset.target.indexOf(".") !== -1;
+                    el.textContent = formatNum(target * eased, isFloat) + suffix;
+                }});
+                if (progress < 1) requestAnimationFrame(animate);
+            }}
             requestAnimationFrame(animate);
         }}
-        if (document.readyState === "loading") {{
-            document.addEventListener("DOMContentLoaded", start);
-        }} else {{
-            start();
-        }}
+
+        // Small delay to ensure Streamlit has painted the parent DOM elements
+        setTimeout(runAnimation, 120);
     }})();
     </script>
     """
+    _components.html(anim_html, height=0)
 
-    st.markdown(
-        f'<div class="metric-grid">{"".join(cards_html)}</div>{anim_js}',
-        unsafe_allow_html=True,
-    )
 
 
 def latest_unique_artwork(rows: pd.DataFrame, limit: int = 6) -> pd.DataFrame:
