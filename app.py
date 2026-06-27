@@ -165,7 +165,7 @@ def inject_global_styles() -> None:
             padding: 1.2rem 1rem 0.8rem;
             text-align: center;
             border-top: 1px solid rgba(255,255,255,.07);
-            font-size: .75rem;
+            font-size: 1rem;
             color: var(--muted);
             letter-spacing: .03em;
         }
@@ -182,7 +182,7 @@ def inject_global_styles() -> None:
             padding: 1.5rem 0;
             text-align: center;
             border-top: 1px solid rgba(255,255,255,.07);
-            font-size: .82rem;
+            font-size: 1.05rem;
             color: var(--muted);
             letter-spacing: .03em;
         }
