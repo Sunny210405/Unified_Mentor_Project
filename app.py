@@ -606,12 +606,21 @@ def inject_global_styles() -> None:
         .search-button .stButton button p {
             color: #041207 !important;
             font-weight: 800 !important;
+            font-size: 1.1rem !important;
             letter-spacing: .02em !important;
             text-transform: none !important;
             margin: 0 !important;
             padding: 0 !important;
             line-height: 1.2 !important;
             display: inline-block !important;
+        }
+
+        [data-testid="stMain"] .stButton button p {
+            font-size: 1.1rem !important;
+            font-weight: 800 !important;
+            color: #041207 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         div[data-testid="element-container"]:has(.search-button) + div[data-testid="element-container"] .stButton button:hover,
