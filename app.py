@@ -303,6 +303,15 @@ def inject_global_styles() -> None:
             letter-spacing: 0;
         }
 
+        /* Hide Streamlit's auto-injected anchor link icon on headings */
+        h1 a, h2 a, h3 a, h4 a,
+        .hero-title a,
+        [data-testid="stMarkdownContainer"] h1 a,
+        [data-testid="stMarkdownContainer"] h2 a,
+        [data-testid="stMarkdownContainer"] h3 a {
+            display: none !important;
+        }
+
         .hero-copy {
             color: var(--muted);
             max-width: 760px;
