@@ -160,6 +160,40 @@ def inject_global_styles() -> None:
             line-height: 1.35;
         }
 
+        .sidebar-credit {
+            margin-top: auto;
+            padding: 1.2rem 1rem 0.8rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,.07);
+            font-size: .75rem;
+            color: var(--muted);
+            letter-spacing: .03em;
+        }
+        .sidebar-credit a {
+            color: var(--accent);
+            font-weight: 700;
+            text-decoration: none;
+            transition: opacity .2s;
+        }
+        .sidebar-credit a:hover { opacity: .75; }
+
+        .page-footer {
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,.07);
+            font-size: .82rem;
+            color: var(--muted);
+            letter-spacing: .03em;
+        }
+        .page-footer a {
+            color: var(--accent);
+            font-weight: 700;
+            text-decoration: none;
+            transition: opacity .2s;
+        }
+        .page-footer a:hover { opacity: .75; }
+
         .sidebar-section-label {
             color: var(--muted);
             font-size: .72rem;
@@ -906,6 +940,10 @@ def main() -> None:
         selected_explicit = st.multiselect("Content maturity", explicit_options, default=explicit_options)
         album_options = sorted(lifecycle["release_form"].unique())
         selected_album = st.multiselect("Release form", album_options, default=album_options)
+        st.markdown(
+            '<div class="sidebar-credit">Made with ❤️ by <a href="https://github.com/Sunny210405" target="_blank">SUNNY</a></div>',
+            unsafe_allow_html=True,
+        )
 
     if "catalog_search" not in st.session_state:
         st.session_state["catalog_search"] = ""
@@ -1256,6 +1294,11 @@ def main() -> None:
         if len(failed):
             st.write("Dates failing the 50-entry rule")
             st.dataframe(failed, use_container_width=True, hide_index=True)
+
+    st.markdown(
+        '<div class="page-footer">Made with ❤️ by <a href="https://github.com/Sunny210405" target="_blank">SUNNY</a> &nbsp;•&nbsp; Spain50 Analytics</div>',
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
