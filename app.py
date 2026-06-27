@@ -96,10 +96,78 @@ def inject_global_styles() -> None:
         }
 
         .stApp {
-            background:
-                radial-gradient(circle at 18% 0%, rgba(29,185,84,.22), transparent 28rem),
-                linear-gradient(180deg, #050505 0%, #0a0a0a 46%, #050505 100%);
+            background: #050505;
             color: var(--text);
+        }
+
+        /* Animated aurora background blobs */
+        .stApp::before,
+        .stApp::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Blob 1 — pinned top-left */
+        .stApp::before {
+            width: 750px;
+            height: 750px;
+            background: radial-gradient(circle, rgba(29,185,84,0.35) 0%, rgba(29,185,84,0.10) 50%, transparent 70%);
+            top: 0;
+            left: 0;
+            transform-origin: top left;
+            animation: blobDrift1 12s ease-in-out infinite alternate;
+        }
+
+        /* Blob 2 — pinned bottom-right, kept faint so it doesn't overpower content */
+        .stApp::after {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(29,185,84,0.22) 0%, rgba(16,120,50,0.07) 60%, transparent 80%);
+            bottom: 0;
+            right: 0;
+            transform-origin: bottom right;
+            animation: blobDrift2 15s ease-in-out infinite alternate;
+        }
+
+        /* Third blob — center screen, very faint */
+        [data-testid="stAppViewContainer"]::before {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle, rgba(29,185,84,0.07) 0%, transparent 70%);
+            top: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: blobDrift3 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes blobDrift1 {
+            0%   { transform: translate(0px, 0px) scale(1);    opacity: 0.85; }
+            33%  { transform: translate(100px, 70px) scale(1.18); opacity: 1; }
+            66%  { transform: translate(-50px, 130px) scale(0.9); opacity: 0.75; }
+            100% { transform: translate(70px, -50px) scale(1.12); opacity: 0.95; }
+        }
+
+        @keyframes blobDrift2 {
+            0%   { transform: translate(0px, 0px) scale(1);     opacity: 0.7; }
+            33%  { transform: translate(-80px, -90px) scale(1.15); opacity: 0.95; }
+            66%  { transform: translate(60px, -50px) scale(0.88);  opacity: 0.7; }
+            100% { transform: translate(-40px, 80px) scale(1.1);  opacity: 0.85; }
+        }
+
+        @keyframes blobDrift3 {
+            0%   { transform: translateX(-50%) scale(1);    opacity: 0.5; }
+            50%  { transform: translateX(-50%) translate(80px, -60px) scale(1.2); opacity: 0.75; }
+            100% { transform: translateX(-50%) translate(-60px, 50px) scale(0.9); opacity: 0.55; }
         }
 
         @keyframes fadeUp {
@@ -129,8 +197,16 @@ def inject_global_styles() -> None:
         }
 
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #000 0%, #101010 100%);
-            border-right: 1px solid var(--border);
+            background: rgba(5, 5, 5, 0.55) !important;
+            backdrop-filter: blur(24px) saturate(1.4) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+            border-right: 1px solid rgba(29,185,84,0.15) !important;
+            box-shadow: 4px 0 32px rgba(0,0,0,0.4);
+        }
+
+        /* Also target the inner content wrapper Streamlit wraps the sidebar in */
+        [data-testid="stSidebar"] > div:first-child {
+            background: transparent !important;
         }
 
         [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2,
@@ -432,14 +508,27 @@ def inject_global_styles() -> None:
         }
 
         .quality-note {
-            border: 1px solid rgba(29,185,84,.28);
-            background: rgba(29,185,84,.10);
-            color: #c7f8d6;
+            border: 1px solid rgba(235,87,87,.45);
+            background: rgba(235,87,87,.10);
+            color: #ffb3b3;
             border-radius: 8px;
             padding: .85rem 1rem;
             margin: .75rem 0 1rem;
             font-weight: 650;
             animation: fadeUp .55s ease both;
+        }
+
+        /* Validation tab — red accent on 7th tab button */
+        [data-testid="stTabs"] [data-baseweb="tab-list"] button:nth-child(7) {
+            color: #ff6b6b !important;
+        }
+        [data-testid="stTabs"] [data-baseweb="tab-list"] button:nth-child(7)[aria-selected="true"] {
+            color: #ff4444 !important;
+            border-bottom-color: #ff4444 !important;
+        }
+        [data-testid="stTabs"] [data-baseweb="tab-list"] button:nth-child(7):hover {
+            color: #ff4444 !important;
+            background: rgba(235,87,87,.10) !important;
         }
 
         .section-title {
@@ -743,7 +832,11 @@ def fmt_num(value, suffix: str = "", digits: int = 1) -> str:
 
 
 def chart_style(chart: alt.Chart) -> alt.Chart:
-    return chart.configure_view(strokeWidth=0).configure_axis(
+    return chart.configure(background="transparent").configure_view(
+        strokeWidth=0,
+        fill="rgba(13,13,13,0.45)",
+        stroke=None,
+    ).configure_axis(
         labelColor="#b3b3b3",
         titleColor="#ffffff",
         gridColor="rgba(255,255,255,.06)",
@@ -1304,12 +1397,22 @@ def main() -> None:
         )
 
     with tabs[6]:
-        st.markdown('<div class="section-title">Raw data validation</div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div style="font-size:1.1rem;font-weight:800;color:#ff6b6b;margin:.35rem 0 .65rem;letter-spacing:0;">'
+            '⚠️ Raw Data Validation</div>',
+            unsafe_allow_html=True,
+        )
         st.dataframe(validation, use_container_width=True, hide_index=True)
         failed = validation[~validation["passes_50_rule"]]
         if len(failed):
-            st.write("Dates failing the 50-entry rule")
+            st.markdown(
+                '<div style="border:1px solid rgba(235,87,87,.45);background:rgba(235,87,87,.10);'
+                'color:#ffb3b3;border-radius:8px;padding:.65rem 1rem;margin:.5rem 0;font-weight:700;">'
+                f'⛔ {len(failed)} date(s) failing the 50-entry rule</div>',
+                unsafe_allow_html=True,
+            )
             st.dataframe(failed, use_container_width=True, hide_index=True)
+
 
     st.markdown(
         '<div class="page-footer">Made with ❤️ by <a href="https://github.com/Sunny210405" target="_blank">SUNNY</a> &nbsp;•&nbsp; Spain50 Analytics</div>',
