@@ -1099,7 +1099,6 @@ def main() -> None:
     visible_keys = filtered_stage["song_key"].unique()
     filtered_lifecycle = lifecycle[lifecycle["song_key"].isin(visible_keys)].copy()
     filtered_churn = date_filter(churn, date_range)
-    latest_artwork = latest_unique_artwork(filtered_stage, 6)
 
     st.markdown(
         """
@@ -1133,13 +1132,26 @@ def main() -> None:
         ]
     )
 
+    if "show_all_covers" not in st.session_state:
+        st.session_state["show_all_covers"] = False
+
+    limit_val = 50 if st.session_state["show_all_covers"] else 6
+    latest_artwork = latest_unique_artwork(filtered_stage, limit_val)
+    
     render_album_rail(latest_artwork, "Latest filtered Top 50 covers")
 
-    # Add expander to view all top 50 covers
-    full_artwork = latest_unique_artwork(filtered_stage, 50)
-    if len(full_artwork) > 6:
-        with st.expander("Expand to view all Top 50 covers"):
-            render_album_rail(full_artwork, title="")
+    # Show dynamic action button below the rail to expand/shrink
+    full_artwork_count = len(latest_unique_artwork(filtered_stage, 50))
+    if full_artwork_count > 6:
+        if st.session_state["show_all_covers"]:
+            if st.button("Show Less ⬆️", key="toggle_covers_btn"):
+                st.session_state["show_all_covers"] = False
+                st.rerun()
+        else:
+            if st.button(f"Show All Top {full_artwork_count} ⬇️", key="toggle_covers_btn"):
+                st.session_state["show_all_covers"] = True
+                st.rerun()
+
 
     if kpis["validation_failed_days"] or kpis["missing_calendar_dates"]:
         st.markdown(
