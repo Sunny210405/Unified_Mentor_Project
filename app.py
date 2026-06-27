@@ -449,7 +449,7 @@ def inject_global_styles() -> None:
         }
 
         .metric-value {
-            color: var(--text);
+            color: var(--accent);
             font-size: 1.9rem;
             font-weight: 800;
             line-height: 1.1;
