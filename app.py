@@ -184,6 +184,24 @@ def inject_global_styles() -> None:
             border-color: rgba(29, 185, 84, 0.5) !important;
         }
 
+        /* Vertically center "Press Enter to apply" hint inside date input */
+        [data-testid="stDateInput"] [data-baseweb="input"],
+        [data-testid="stDateInput"] [data-baseweb="base-input"] {
+            display: flex !important;
+            align-items: center !important;
+        }
+        [data-testid="stDateInput"] input + div,
+        [data-testid="stDateInput"] [data-testid="InputInstructions"] {
+            display: flex !important;
+            align-items: center !important;
+            align-self: center !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            position: relative !important;
+        }
+
         [data-testid="stFileUploader"] section {
             background: #121212;
             border: 1px dashed rgba(255,255,255,.20);
