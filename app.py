@@ -1146,14 +1146,16 @@ def main() -> None:
     # Show dynamic action button below the rail to expand/shrink
     full_artwork_count = len(latest_unique_artwork(filtered_stage, 50, by_cover=False))
     if full_artwork_count > 6:
-        if is_expanded:
-            if st.button("Show Less ↑", key="toggle_covers_btn"):
-                st.session_state["show_all_covers"] = False
-                st.rerun()
-        else:
-            if st.button(f"Show All Top {full_artwork_count} ↓", key="toggle_covers_btn"):
-                st.session_state["show_all_covers"] = True
-                st.rerun()
+        _, btn_col, _ = st.columns([1.5, 1, 1.5])
+        with btn_col:
+            if is_expanded:
+                if st.button("Show Less ↑", key="toggle_covers_btn", use_container_width=True):
+                    st.session_state["show_all_covers"] = False
+                    st.rerun()
+            else:
+                if st.button(f"Show All Top {full_artwork_count} ↓", key="toggle_covers_btn", use_container_width=True):
+                    st.session_state["show_all_covers"] = True
+                    st.rerun()
 
 
 
